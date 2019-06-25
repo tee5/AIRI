@@ -1,0 +1,12 @@
+https://aobako.net/python/responder/responser-tutorial/
+https://blog.ikedaosushi.com/entry/2018/12/01/195512
+https://docs.sqlalchemy.org/en/13/orm/examples.html
+https://note.mu/shimakaze_soft/n/ne47bc123dc83
+https://qiita.com/bokotomo/items/a762b1bc0f192a55eae8
+https://qiita.com/kerupani129/items/0372ea29d9375e55bb36
+https://qiita.com/msrks/items/15144746ff4f7aced4b5
+https://qiita.com/Ok_Sun_Shine/items/1fee537d5ac300e41836
+https://qiita.com/tez/items/939168dbb31905948f46
+https://www.google.com/search?q=python+sqlalchemy&rlz=1C5CHFA_enJP821JP821&oq=python+sqla&aqs=chrome.1.69i57j0l5.6061j0j7&sourceid=chrome&ie=UTF-8
+https://www.subarunari.com/entry/python-web-responder
+https://www.virtual-surfer.com/entry/2018/04/10/190000
