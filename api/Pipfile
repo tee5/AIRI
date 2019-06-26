@@ -9,6 +9,7 @@ black = "*"
 [packages]
 responder = "*"
 sqlalchemy = "*"
+black = "*"
 
 [requires]
 python_version = "3.7"
