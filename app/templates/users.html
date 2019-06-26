@@ -1,3 +1,25 @@
+<head>
+    <meta charset="utf-8">
+</head>    
 <body>
-    users
+    <table>
+        <thead>
+            <tr>
+                <th>社員番号</th>
+                <th>名前</th>
+                <th>詳細</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{user.empno}}</td>
+                    <td>{{user.lastname_ja}} {{user.firstname_ja}}</td>
+                    <td>
+                        <a href="/user/{{user.empno}}/browse"></a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
