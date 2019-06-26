@@ -8,41 +8,81 @@ from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, text, DateTime
 from sqlalchemy.sql.functions import current_timestamp
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.exc import NoResultFound
 
 from models import User
 
-db_connect = os.environ["db_connect"]
-db_encoding = os.environ["db_encoding"]
-db_echo = bool(os.environ["db_echo"])
+db_connect = os.environ["DB_CONNECT"]
+db_encoding = os.environ["DB_ENCODING"]
+db_echo = bool(os.environ["DB_ECHO"])
 engine = create_engine(db_connect, encoding=db_encoding, echo=db_echo)
 Session = sessionmaker(bind=engine)
 
-
 api = responder.API()
 
-
 @api.route("/users")
-def get_users(req, resp):
-    resp.headers = {"Content-Type": "application/json; charset=utf-8"}
-
-    session = Session()
-    users = session.query(User).all()
-    print(type(users))
-    result = []
-    for user in users:
-        result.append(user.serialize)
-    resp.text = json.dumps(result, ensure_ascii=False, indent=4)
-
+class UsersResource(object):
+    def on_get(self, req, resp):
+        resp.headers = {"Content-Type": "application/json; charset=utf-8"}
+        session = Session()
+        try:
+            users = session.query(User).all()
+            result = []
+            for user in users:
+                result.append(user.to_dict())
+            resp.text = json.dumps(result, ensure_ascii=False, indent=4)
+        except Exception as e:
+            print(type(e), e)
+            resp.status_code = 500
 
 @api.route("/user/{empno}")
-def get_user(req, resp, *, empno):
-    resp.headers = {"Content-Type": "application/json; charset=utf-8"}
-    session = Session()
-    result = session.query(User).filter_by(empno=empno).one()
-    resp.content = json.dumps(result.serialize, ensure_ascii=False, indent=4)
-    print(result)
-    print(result.password)
+class UserResource(object):
+    def on_get(self, req, resp, *, empno):
+        print("start GET /user/{empno}", empno)
+        resp.headers = {"Content-Type": "application/json; charset=utf-8"}
+        session = Session()
+        try:
+            result = session.query(User).filter_by(empno=empno).one()
+            
+            resp.content = json.dumps(result.to_dict(), ensure_ascii=False, indent=4)
+        except NoResultFound as e:
+            resp.status_code = 404
+        except Exception as e:
+            resp.status_code = 500
+        
+    def on_post(self, req, resp, *, empno):
+        pass
+
+    def on_put(self, req, resp, *, empno):
+        pass
+
+@api.route("/login")
+class LoginResource(object):
+    async def on_post(self, req, resp):
+        print("start login:")
+        resp.headers = {"Content-Type": "application/json; charset=utf-8"}
+        try:
+            data = await req.media()
+        except Exception as e:
+            print("except:",type(e), e)
+        
+        session = Session()
+
+        try:
+            result = session.query(User).filter_by(empno=data["empno"], password=data["password"]).one()
+            success = 0 if result is None else 1
+            resp.content = json.dumps({"success": success}, ensure_ascii=False, indent=4)
+        except NoResultFound as e:
+            resp.status_code = 404
+        except Exception as e:
+            resp.status_code = 500
+
 
 
 if __name__ == "__main__":
-    api.run(port=8081)
+    param = {
+        "address": os.environ["API_ADDRESS"],
+        "port": int(os.environ["API_PORT"]),
+        "debug": bool(os.environ["API_DEBUG"])
+    }
+    api.run(**param)
