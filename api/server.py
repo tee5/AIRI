@@ -17,6 +17,7 @@ db_echo = bool(os.environ["db_echo"])
 engine = create_engine(db_connect, encoding=db_encoding, echo=db_echo)
 Session = sessionmaker(bind=engine)
 
+
 api = responder.API()
 
 
@@ -26,18 +27,22 @@ def get_users(req, resp):
 
     session = Session()
     users = session.query(User).all()
+    print(type(users))
     result = []
     for user in users:
         result.append(user.serialize)
-    resp.content = json.dumps(result, ensure_ascii=False, indent=4)
+    resp.text = json.dumps(result, ensure_ascii=False, indent=4)
+
 
 @api.route("/user/{empno}")
 def get_user(req, resp, *, empno):
     resp.headers = {"Content-Type": "application/json; charset=utf-8"}
     session = Session()
-    result = session.query(User).filter_by(User.empno = empno).one()
-    resp.content = json.dumps(result[0], ensure_ascii=False, indent=4)
+    result = session.query(User).filter_by(empno=empno).one()
+    resp.content = json.dumps(result.serialize, ensure_ascii=False, indent=4)
+    print(result)
+    print(result.password)
 
 
 if __name__ == "__main__":
-    api.run(port=8080)
+    api.run(port=8081)
