@@ -1,15 +1,16 @@
 <head>
     <meta charset="utf-8">
+    <link type="text/css" rel="stylesheet" href="/static/css/common.css">
 </head>
 <body>
-    <h1>LOGIN</h1>
+    <header><h1>LOGIN</h1></header>
     <span>{{message}}</span>
     <form action="login" method="POST">
         <label for="">社員番号
-            <input type="text" name="empno" id="empno">
+            <input type="text" name="empno" id="empno" required>
         </label>
         <label for="">パスワード
-            <input type="password" name="password" id="password">
+            <input type="password" name="password" id="password" required>
         </label>
         <input type="submit" value="ログイン">
     </form>

@@ -1,7 +1,9 @@
 <head>
     <meta charset="utf-8">
+    <link type="text/css" rel="stylesheet" href="/static/css/common.css">
     <style>
         table {
+            margin: 10px;
             border: 1px solid #000;
             border-collapse: collapse;
             border-spacing: 0;
@@ -12,6 +14,10 @@
     </style>
 </head>
 <body>
+    <header>
+        <h1>USERS</h1>
+        current user : {{session["empno"]}}
+    </header>
     <div>
         <a href="/logout">ログアウト</a>
         <table>
@@ -33,10 +39,16 @@
                     <td>{{user.email}}</td>
                     <td>
                         <a href="/user/{{user.empno}}/browse">詳細</a>
+                        {% if current_user.admin %}
+                            <a href="/user/{{user.empno}}/edit">編集</a>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        {% if current_user.admin %}
+            <a href="/user/create">ユーザ追加</a>
+        {% endif %}
     </div>
 </body>
