@@ -1,0 +1,29 @@
+<head>
+    <meta charset="utf-8">
+    <style>
+        table {
+            border: 1px solid #000;
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+        td, th {
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+
+<a href="/logout">ログアウト</a>
+<a href="/users">一覧に戻る</a>
+<table>
+    <tbody>
+        <tr><th>社員番号</th><td>{{user.empno}}</td></tr>
+        <tr><th>名字(日本語)</th><td>{{user.lastname_ja}}</td></tr>
+        <tr><th>名前(日本語)</th><td>{{user.firstname_ja}}</td></tr>
+        <tr><th>名字(英語)</th><td>{{user.lastname_en}}</td></tr>
+        <tr><th>名前(英語)</th><td>{{user.firstname_en}}</td></tr>
+        <tr><th>Email</th><td>{{user.email}}</td></tr>
+        <tr><th>管理者</th><td>{{user.admin}}</td></tr>
+    </tbody>
+</table>
+</body>

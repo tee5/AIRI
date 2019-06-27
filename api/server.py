@@ -59,21 +59,22 @@ class UserResource(object):
 @api.route("/login")
 class LoginResource(object):
     async def on_post(self, req, resp):
-        print("start login:")
+        print("start api login:")
         resp.headers = {"Content-Type": "application/json; charset=utf-8"}
         try:
             data = await req.media()
         except Exception as e:
             print("except:",type(e), e)
-        
+        print("data:", data)
         session = Session()
 
         try:
-            result = session.query(User).filter_by(empno=data["empno"], password=data["password"]).one()
-            success = 0 if result is None else 1
-            resp.content = json.dumps({"success": success}, ensure_ascii=False, indent=4)
+            user = session.query(User).filter_by(empno=data["empno"], password=data["password"]).one()
+            print(user)
+            resp.content = json.dumps({"success": 1}, ensure_ascii=False, indent=4)
         except NoResultFound as e:
-            resp.status_code = 404
+            print("NoResultFound")
+            resp.content = json.dumps({"success": 0}, ensure_ascii=False, indent=4)
         except Exception as e:
             resp.status_code = 500
 

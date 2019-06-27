@@ -3,9 +3,14 @@
 </head>
 <body>
     <h1>LOGIN</h1>
+    <span>{{message}}</span>
     <form action="login" method="POST">
-        <input type="text" name="empno" id="empno">
-        <input type="password" name="password" id="password">
+        <label for="">社員番号
+            <input type="text" name="empno" id="empno">
+        </label>
+        <label for="">パスワード
+            <input type="password" name="password" id="password">
+        </label>
         <input type="submit" value="ログイン">
     </form>
 </body>

@@ -1,25 +1,42 @@
 <head>
     <meta charset="utf-8">
-</head>    
+    <style>
+        table {
+            border: 1px solid #000;
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+        table td, table th {
+            border: 1px solid #000;
+        }
+    </style>
+</head>
 <body>
-    <table>
-        <thead>
-            <tr>
-                <th>社員番号</th>
-                <th>名前</th>
-                <th>詳細</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users %}
+    <div>
+        <a href="/logout">ログアウト</a>
+        <table>
+            <thead>
+                <tr>
+                    <th>社員番号</th>
+                    <th>名前(日本語)</th>
+                    <th>名前(英語)</th>
+                    <th>Email</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
                 <tr>
                     <td>{{user.empno}}</td>
                     <td>{{user.lastname_ja}} {{user.firstname_ja}}</td>
+                    <td>{{user.firstname_en}} {{user.lastname_en}}</td>
+                    <td>{{user.email}}</td>
                     <td>
-                        <a href="/user/{{user.empno}}/browse"></a>
+                        <a href="/user/{{user.empno}}/browse">詳細</a>
                     </td>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </body>
