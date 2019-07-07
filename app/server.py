@@ -14,20 +14,36 @@ api = responder.API(secret_key=os.environ["SECRET_KEY"])
 
 
 @api.route(before_request=True)
-def prepare_response(req, resp):
+async def prepare_response(req, resp):
     print(f"start [app] prepare_response: req.session={req.session}, resp.session={resp.session}, cookie={req.cookies}")
-    
+
     # ログイン状況に応じた制御
-    if "empno" in req.session:
-        # session情報にempnoがログイン必要なし
-        pass
-    elif req.url.path == "/login":
+    print("path 1")
+    if req.url.path == "/login":
         # loginページへのアクセスはログイン必要なし
-        pass
+        print("path 2")
+        return
+    elif req.url.path == "/logout":
+        # loginページへのアクセスはログイン必要なし
+        print("path 3")
+        return
+    elif "empno" in req.session:
+        print("path 4")
+        if req.session["empno"] == "":
+            # empno が "" か None なら要ログイン
+            print("path 4.1")
+            await api.redirect(resp=resp, location="/login")
+            print("path 4.2")
+            return
+        else:
+            print("path 4.3")
+            return
     else:
         # それ以外はloginページへリダイレクト
-        api.redirect(resp=resp, location="/login")
-
+        print("path 5")
+        await api.redirect(resp=resp, location="/login")
+        print("path 5.5")
+    print("path 6")
 @api.route("/")
 def root(req, resp):
     print(f"start [app] root: session={req.session}, cookie={req.cookies}")
@@ -48,9 +64,11 @@ def browse_user(req, resp, *, empno):
 
 @api.route("/login")
 async def login(req, resp):
-    print(f"start [app] login: session={req.session}, cookie={req.cookies}")
+    print(f"start [app] login: req.session={req.session}, resp.session={resp.session}, cookie={req.cookies}")
     # session情報をクリア
-    resp.session = {}
+    print("before:", req.session, resp.session)
+    resp.session["empno"] = ""
+    print("after:", req.session, resp.session)
 
     print("req.method:", req.method)
     if req.method == "post":
@@ -74,11 +92,13 @@ async def login(req, resp):
 
 @api.route("/logout")
 def logout(req, resp):
-    print(f"start [app] logout: session={req.session}, cookie={req.cookies}")
+    print(f"start [app] logout: req.session={req.session}, resp.session={resp.session}, cookie={req.cookies}")
     # セッション情報をクリア
-    resp.session = {}
+    print("before:", req.session, resp.session)
+    resp.session["empno"] = ""
+    print("after:", req.session, resp.session)
     resp.html = api.template("logout.html")
-    
+
 
 if __name__ == "__main__":
     param = {
