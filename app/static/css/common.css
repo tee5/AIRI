@@ -13,3 +13,7 @@ header > h1 {
     display: inline;
     color: #fff;    
 }
+
+.error_message {
+    color: #f00;
+}

@@ -52,9 +52,10 @@ class UserResource(object):
 
     async def on_post(self, req, resp, *, empno):
         """ edit """
-        print("start POST /user/{empno}", empno)
+        print(f"start POST /user/{empno}")
         resp.headers = {"Content-Type": "application/json; charset=utf-8"}
         data = await req.media()
+        print(f"data={data}")
         session = Session()
         user = session.query(User).filter_by(empno=empno).one()
         user.firstname_ja = data["firstname_ja"]
@@ -63,6 +64,7 @@ class UserResource(object):
         user.lastname_en = data["lastname_en"]
         user.email = data["email"]
         user.admin = data["admin"]
+        user.deleted = data["deleted"]
         try:
             session.commit()
             resp.status_code = 200

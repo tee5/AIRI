@@ -1,0 +1,38 @@
+<head>
+    <meta charset="utf-8">
+    <link type="text/css" rel="stylesheet" href="/static/css/common.css">
+    <style>
+        table {
+            border: 1px solid #000;
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+        td, th {
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <header><h1>EDIT USER</h1> current user : <span>{{session["empno"]}}</span></header>
+    <a href="/logout">ログアウト</a>
+    <a href="/users">一覧に戻る</a>
+    {% if message != "" %}
+        <span>{{message}}</span>
+    {% endif %}
+    <form action="/user/edit/{{user.empno}}" method="POST">
+        <table>
+            <tbody>
+                <tr><th>社員番号</th><td><input type="text" name="empno" id="empno" minlength="4" maxlength="4" pattern="^\d{4}$" value="{{user.empno}}" disabled required></td></tr>
+                <tr><th>名字(日本語)</th><td><input type="text" name="lastname_ja" id="lastname_ja" value="{{user.lastname_ja}}" required></td></tr>
+                <tr><th>名前(日本語)</th><td><input type="text" name="firstname_ja" id="firstname_ja" value="{{user.firstname_ja}}" required></td></tr>
+                <tr><th>名字(英語)</th><td><input type="text" name="lastname_en" id="lastname_en" value="{{user.lastname_en}}" required></td></tr>
+                <tr><th>名前(英語)</th><td><input type="text" name="firstname_en" id="firstname_en" value="{{user.firstname_en}}" required></td></tr>
+                <tr><th>Email</th><td><input type="text" name="email" id="email" value="{{user.email}}" required></td></tr>
+                <tr><th>管理者</th><td><input type="number" name="admin" id="admin" value="{{user.admin}}" pattern="[01]" min="0" max="1" required></td></tr>
+                <tr><th>削除済</th><td><input type="number" name="deleted" id="deleted" value="{{user.deleted}}" pattern="[01]" min="0" max="1" required></td></tr>
+            </tbody>
+        </table>
+        <input type="submit" value="更新">
+    </form>
+    <!-- <script src="/static/js/create_user.js"></script> -->
+</body>

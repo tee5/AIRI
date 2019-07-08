@@ -25,6 +25,15 @@ class AiriClient(object):
         resp = requests.put(self.base_path + "/user/" + empno, data=data)
         return resp.status_code == 201
 
+    def edit_user(self, data):
+        empno = data["empno"]
+        print(f"airi_client.edit_user: empno={empno}, data={data}")
+        print(self.base_path + "/user/" + empno)
+        resp = requests.post(self.base_path + "/user/" + empno, data=data)
+
+
+        return resp.status_code == 200
+
     def login(self, empno, password):
         print(empno, password)
         data = {

@@ -11,6 +11,9 @@
         table td, table th {
             border: 1px solid #000;
         }
+        tr.deleted {
+            background-color: #777;
+        }
     </style>
 </head>
 <body>
@@ -32,7 +35,7 @@
             </thead>
             <tbody>
                 {% for user in users %}
-                <tr>
+                <tr {% if  user.deleted %} class="deleted" {% endif %}>
                     <td>{{user.empno}}</td>
                     <td>{{user.lastname_ja}} {{user.firstname_ja}}</td>
                     <td>{{user.firstname_en}} {{user.lastname_en}}</td>

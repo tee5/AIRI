@@ -62,8 +62,33 @@ def browse_user(req, resp, *, empno):
     user = client.get_user(empno)
     resp.html = api.template("browse_user.html", session=resp.session, user=user)
 
+@api.route("/user/edit/{empno}")
+async def edit_user(req, resp, *, empno):
+    print(f"start [app] edit_user: session={req.session}, cookie={req.cookies}, method={req.method}")
+    user = client.get_user(empno)
+    print(f"user={user}")
+    if req.method == "get":
+        resp.html = api.template("edit_user.html", session=resp.session, user=user, message="")
+    elif req.method == "post":
+        data = await req.media()
+        print(f"data={data}")
+        
+        data["empno"] = [user["empno"]]
+
+        result = client.edit_user(data)
+
+        if result:
+            message = "OK"
+        else:
+            message = "NG"
+        resp.html = api.template("edit_user.html", session=resp.session, user=user, message=message)
+    else:
+        resp.status_code = 400
+        resp.redirect(resp=resp, location="/static/error/404.html")
+
+
 @api.route("/user/create")
-async def get_create_user(req, resp):
+async def create_user(req, resp):
     print(f"start [app] create_user: session={req.session}, cookie={req.cookies}")
     if req.method == "get":
         resp.html = api.template("create_user.html", session=resp.session, message="")
@@ -78,7 +103,7 @@ async def get_create_user(req, resp):
             message = "NG"
         resp.html = api.template("create_user.html", session=resp.session, message=message)
     else:
-        resp.status_code = 200
+        resp.status_code = 400
         resp.redirect(resp=resp, location="/static/error/404.html")
 
 
