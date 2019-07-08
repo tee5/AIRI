@@ -38,9 +38,9 @@
                     <td>{{user.firstname_en}} {{user.lastname_en}}</td>
                     <td>{{user.email}}</td>
                     <td>
-                        <a href="/user/{{user.empno}}/browse">詳細</a>
+                        <a href="/user/browse/{{user.empno}}">詳細</a>
                         {% if current_user.admin %}
-                            <a href="/user/{{user.empno}}/edit">編集</a>
+                            <a href="/user/edit/{{user.empno}}">編集</a>
                         {% endif %}
                     </td>
                 </tr>

@@ -16,15 +16,23 @@
     <header><h1>BROWSE USER</h1> current user : <span>{{session["empno"]}}</span></header>
     <a href="/logout">ログアウト</a>
     <a href="/users">一覧に戻る</a>
-    <table>
-        <tbody>
-            <tr><th>社員番号</th><td>{{user.empno}}</td></tr>
-            <tr><th>名字(日本語)</th><td>{{user.lastname_ja}}</td></tr>
-            <tr><th>名前(日本語)</th><td>{{user.firstname_ja}}</td></tr>
-            <tr><th>名字(英語)</th><td>{{user.lastname_en}}</td></tr>
-            <tr><th>名前(英語)</th><td>{{user.firstname_en}}</td></tr>
-            <tr><th>Email</th><td>{{user.email}}</td></tr>
-            <tr><th>管理者</th><td>{{user.admin}}</td></tr>
-        </tbody>
-    </table>
+    {% if message != "" %}
+        <span>{{message}}</span>
+    {% endif %}
+    <form action="/user/create" method="POST">
+        <table>
+            <tbody>
+                <tr><th>社員番号</th><td><input type="text" name="empno" id="empno" minlength="4" maxlength="4" pattern="^\d{4}$" required></td></tr>
+                <tr><th>パスワード</th><td><input type="text" name="password" id="password" minlength="6" pattern="^[a-zA-Z0-9_;\-]+$" required></td></tr>
+                <tr><th>名字(日本語)</th><td><input type="text" name="lastname_ja" id="lastname_ja" required></td></tr>
+                <tr><th>名前(日本語)</th><td><input type="text" name="firstname_ja" id="firstname_ja" required></td></tr>
+                <tr><th>名字(英語)</th><td><input type="text" name="lastname_en" id="lastname_en" required></td></tr>
+                <tr><th>名前(英語)</th><td><input type="text" name="firstname_en" id="firstname_en" required></td></tr>
+                <tr><th>Email</th><td><input type="text" name="email" id="email" required></td></tr>
+                <tr><th>管理者</th><td><input type="text" name="admin" id="admin" pattern="[01]" maxlength="1" required></td></tr>
+            </tbody>
+        </table>
+        <input type="submit" value="登録">
+    </form>
+    <!-- <script src="/static/js/create_user.js"></script> -->
 </body>

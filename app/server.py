@@ -56,11 +56,31 @@ def users(req, resp):
     current_user = client.get_user(req.session["empno"])
     resp.html = api.template("users.html", session=resp.session, current_user=current_user, users=users)
 
-@api.route("/user/{empno}/browse")
+@api.route("/user/browse/{empno}")
 def browse_user(req, resp, *, empno):
     print(f"start [app] browse_user: session={req.session}, cookie={req.cookies}")
     user = client.get_user(empno)
     resp.html = api.template("browse_user.html", session=resp.session, user=user)
+
+@api.route("/user/create")
+async def get_create_user(req, resp):
+    print(f"start [app] create_user: session={req.session}, cookie={req.cookies}")
+    if req.method == "get":
+        resp.html = api.template("create_user.html", session=resp.session, message="")
+    elif req.method == "post":
+        data = await req.media()
+        print(data["empno"])
+        print(data["lastname_ja"])
+        result = client.create_user(data)
+        if result:
+            message = "OK"
+        else:
+            message = "NG"
+        resp.html = api.template("create_user.html", session=resp.session, message=message)
+    else:
+        resp.status_code = 200
+        resp.redirect(resp=resp, location="/static/error/404.html")
+
 
 @api.route("/login")
 async def login(req, resp):

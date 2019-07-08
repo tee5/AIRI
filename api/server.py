@@ -16,7 +16,8 @@ db_connect = os.environ["DB_CONNECT"]
 db_encoding = os.environ["DB_ENCODING"]
 db_echo = bool(os.environ["DB_ECHO"])
 engine = create_engine(db_connect, encoding=db_encoding, echo=db_echo)
-Session = sessionmaker(bind=engine)
+Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+#Session = sessionmaker(bind=engine)
 
 api = responder.API()
 
@@ -43,18 +44,53 @@ class UserResource(object):
         session = Session()
         try:
             result = session.query(User).filter_by(empno=empno).one()
-            
             resp.content = json.dumps(result.to_dict(), ensure_ascii=False, indent=4)
         except NoResultFound as e:
             resp.status_code = 404
         except Exception as e:
             resp.status_code = 500
-        
-    def on_post(self, req, resp, *, empno):
-        pass
 
-    def on_put(self, req, resp, *, empno):
-        pass
+    async def on_post(self, req, resp, *, empno):
+        """ edit """
+        print("start POST /user/{empno}", empno)
+        resp.headers = {"Content-Type": "application/json; charset=utf-8"}
+        data = await req.media()
+        session = Session()
+        user = session.query(User).filter_by(empno=empno).one()
+        user.firstname_ja = data["firstname_ja"]
+        user.lastname_ja = data["lastname_ja"]
+        user.firstname_en = data["firstname_en"]
+        user.lastname_en = data["lastname_en"]
+        user.email = data["email"]
+        user.admin = data["admin"]
+        try:
+            session.commit()
+            resp.status_code = 200
+        except Exception as e:
+            resp.status_code = 500
+
+    async def on_put(self, req, resp, *, empno):
+        """ create """
+        print("start PUT /user/{empno}", empno)
+        resp.headers = {"Content-Type": "application/json; charset=utf-8"}
+        data = await req.media()
+        user = User()
+        user.empno = empno
+        user.password = data["password"]
+        user.firstname_ja = data["firstname_ja"]
+        user.lastname_ja = data["lastname_ja"]
+        user.firstname_en = data["firstname_en"]
+        user.lastname_en = data["lastname_en"]
+        user.email = data["email"]
+        user.admin = data["admin"]
+        try:
+            session = Session()
+            session.add(user)
+            session.commit()
+            resp.status_code = 201
+        except Exception as e:
+            resp.status_code = 500
+
 
 @api.route("/login")
 class LoginResource(object):

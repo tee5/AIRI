@@ -20,6 +20,11 @@ class AiriClient(object):
         resp = requests.get(self.base_path + "/user/" + empno)
         return resp.json()
 
+    def create_user(self, data):
+        empno = data["empno"]
+        resp = requests.put(self.base_path + "/user/" + empno, data=data)
+        return resp.status_code == 201
+
     def login(self, empno, password):
         print(empno, password)
         data = {
